@@ -1,0 +1,16 @@
+{
+  "name": "FireResQ Responder Squad",
+  "short_name": "Squad Portal",
+  "start_url": "/responder",
+  "scope": "/responder",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#dc2626",
+  "icons": [
+    {
+      "src": "/squad-icon.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png"
+    }
+  ]
+}

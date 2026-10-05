@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum TeamStatus {
+  AVAILABLE
+  DISPATCHED
+  OFF_DUTY
+  RETURNING
+}
+
+enum IncidentStatus {
+  REPORTED
+  IN_ROUTING
+  REACHED_SCENE
+  CONTAINED
+  RESOLVED
+}
+
+enum Severity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+model Team {
+  id         String     @id @default(uuid())
+  name       String
+  type       String     @default("WATER_TENDER")
+  leaderName String
+  phone      String
+  status     TeamStatus @default(AVAILABLE)
+  latitude   Float?
+  longitude  Float?
+  address    String?
+  incidents  Incident[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  @@map("teams")
+}
+
+model Incident {
+  id             String         @id @default(uuid())
+  title          String
+  description    String?
+  location       String
+  severity       Severity       @default(CRITICAL)
+  status         IncidentStatus @default(REPORTED)
+  latitude       Float?
+  longitude      Float?
+  audioData      String?        @db.Text
+  teamId         String?
+  team           Team?          @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  reportedAt     DateTime       @default(now())
+  routedAt       DateTime?
+  reachedSceneAt DateTime?
+  containedAt    DateTime?
+  resolvedAt     DateTime?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@map("incidents")
+}

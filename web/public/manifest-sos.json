@@ -1,0 +1,16 @@
+{
+  "name": "FireResQ Citizen SOS",
+  "short_name": "Citizen SOS",
+  "start_url": "/sos",
+  "scope": "/sos",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#dc2626",
+  "icons": [
+    {
+      "src": "/sos-icon.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png"
+    }
+  ]
+}

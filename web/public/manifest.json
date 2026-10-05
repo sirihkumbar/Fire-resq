@@ -1,0 +1,43 @@
+{
+  "name": "FireResQ Emergency Network",
+  "short_name": "FireResQ",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#dc2626",
+  "icons": [
+    {
+      "src": "/app-icon.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Citizen SOS",
+      "short_name": "SOS",
+      "description": "Report an emergency immediately",
+      "url": "/sos",
+      "icons": [
+        {
+          "src": "/sos-icon.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Responder Squad",
+      "short_name": "Squad",
+      "description": "Squad incident dispatch portal",
+      "url": "/responder",
+      "icons": [
+        {
+          "src": "/squad-icon.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}

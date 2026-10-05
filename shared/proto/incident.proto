@@ -1,0 +1,121 @@
+syntax = "proto3";
+
+package incident;
+
+service IncidentService {
+  rpc ReportIncident (ReportIncidentRequest) returns (IncidentResponse);
+  rpc GetIncidents (GetIncidentsRequest) returns (GetIncidentsResponse);
+  rpc UpdateIncidentStatus (UpdateStatusRequest) returns (IncidentResponse);
+  rpc AssignTeam (AssignTeamRequest) returns (IncidentResponse);
+  
+  rpc CreateTeam (CreateTeamRequest) returns (TeamResponse);
+  rpc UpdateTeam (UpdateTeamRequest) returns (TeamResponse);
+  rpc DeleteTeam (DeleteTeamRequest) returns (DeleteTeamResponse);
+  rpc GetTeams (GetTeamsRequest) returns (GetTeamsResponse);
+  rpc UpdateTeamStatus (UpdateTeamStatusRequest) returns (TeamResponse);
+  rpc ClearResolvedIncidents (ClearHistoryRequest) returns (ClearHistoryResponse);
+}
+
+message DeleteTeamRequest {
+  string id = 1;
+}
+
+message DeleteTeamResponse {
+  bool success = 1;
+  string id = 2;
+}
+
+message ClearHistoryRequest {}
+message ClearHistoryResponse {
+  bool success = 1;
+  int32 count = 2;
+}
+
+message TeamResponse {
+  string id = 1;
+  string name = 2;
+  string type = 3;
+  string leaderName = 4;
+  string phone = 5;
+  string status = 6;
+  double latitude = 7;
+  double longitude = 8;
+  string createdAt = 9;
+}
+
+message CreateTeamRequest {
+  string name = 1;
+  string type = 2;
+  string leaderName = 3;
+  string phone = 4;
+  double latitude = 5;
+  double longitude = 6;
+}
+
+message UpdateTeamRequest {
+  string id = 1;
+  string name = 2;
+  string type = 3;
+  string leaderName = 4;
+  string phone = 5;
+  string status = 6;
+}
+
+message GetTeamsRequest {}
+
+message GetTeamsResponse {
+  repeated TeamResponse teams = 1;
+}
+
+message UpdateTeamStatusRequest {
+  string id = 1;
+  string status = 2;
+  double latitude = 3;
+  double longitude = 4;
+}
+
+message AssignTeamRequest {
+  string incidentId = 1;
+  string teamId = 2;
+}
+
+message ReportIncidentRequest {
+  string title = 1;
+  string description = 2;
+  string location = 3;
+  string severity = 4;
+  double latitude = 5;
+  double longitude = 6;
+  string audioData = 7;
+}
+
+message IncidentResponse {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  string location = 4;
+  string severity = 5;
+  string status = 6;
+  string createdAt = 7;
+  double latitude = 8;
+  double longitude = 9;
+  string teamId = 10;
+  TeamResponse team = 11;
+  string reportedAt = 12;
+  string routedAt = 13;
+  string reachedSceneAt = 14;
+  string containedAt = 15;
+  string resolvedAt = 16;
+  string audioData = 17;
+}
+
+message GetIncidentsRequest {}
+
+message GetIncidentsResponse {
+  repeated IncidentResponse incidents = 1;
+}
+
+message UpdateStatusRequest {
+  string id = 1;
+  string status = 2;
+}

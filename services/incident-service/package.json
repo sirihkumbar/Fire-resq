@@ -1,0 +1,29 @@
+{
+  "name": "incident-service",
+  "version": "1.0.0",
+  "description": "gRPC Incident microservice handling PostgreSQL and Kafka dispatch",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "ts-node src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "prisma skills sync || exit 0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.14.5",
+    "@grpc/proto-loader": "^0.8.1",
+    "@prisma/client": "5.22.0",
+    "dotenv": "^18.0.5",
+    "kafkajs": "^2.2.4",
+    "prisma": "5.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "nodemon": "^3.1.14",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3"
+  }
+}

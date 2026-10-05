@@ -1,0 +1,87 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: fireresq-postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: fireresq
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - fireresq-network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: fireresq-kafka
+    restart: always
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:29093'
+      KAFKA_LISTENERS: 'PLAINTEXT://0.0.0.0:29092,CONTROLLER://0.0.0.0:29093,PLAINTEXT_HOST://0.0.0.0:9092'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
+    networks:
+      - fireresq-network
+
+  incident-service:
+    build:
+      context: .
+      dockerfile: services/incident-service/Dockerfile
+    container_name: fireresq-incident-service
+    restart: always
+    depends_on:
+      - postgres
+      - kafka
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgrespassword@postgres:5432/fireresq?schema=public"
+      KAFKA_BROKER: "kafka:29092"
+    ports:
+      - "50051:50051"
+    networks:
+      - fireresq-network
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: services/notification-service/Dockerfile
+    container_name: fireresq-notification-service
+    restart: always
+    depends_on:
+      - kafka
+    environment:
+      KAFKA_BROKER: "kafka:29092"
+    networks:
+      - fireresq-network
+
+  gateway:
+    build:
+      context: .
+      dockerfile: services/gateway/Dockerfile
+    container_name: fireresq-gateway
+    restart: always
+    depends_on:
+      - incident-service
+    environment:
+      INCIDENT_SERVICE_URL: "incident-service:50051"
+    ports:
+      - "4001:4000"
+    networks:
+      - fireresq-network
+
+volumes:
+  pgdata:
+
+networks:
+  fireresq-network:
+    driver: bridge
